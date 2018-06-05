@@ -4,7 +4,7 @@ from functools import wraps
 
 
 def decorator(fn):
-	"""打印运行时间，数据量小的时候为0是正常情况"""
+	"""打印运行时间，数据量小的时候为0是正常情况,有迭代的不可用"""
 	@wraps(fn)
 	def wrapped(*args,**kwargs):
 		st = time.time()
@@ -52,6 +52,18 @@ def quick_sort(array):
 		greater = [j for j in array[1:] if j > pivot]
 		return quick_sort(less) + [pivot] + quick_sort(greater)
 
+def random_quick_sort(array):
+	"""随机快速排序，分片+递归，随机的下标用randint方法产生"""
+	length = len(array)
+	if length < 2:
+		return array
+	else:
+		index = random.randint(0,length-1)
+		pivot = array[index]
+		a = array[:index]+array[index+1:]
+		left = [i for i in a if i <= pivot]
+		right = [j for j in a if j > pivot]
+		return random_quick_sort(left)+[pivot]+random_quick_sort(right)
 
 def insert_sort1(relist):
 	"""插入排序,用python的insert和pop方法"""
@@ -132,6 +144,7 @@ def merge_sort(relist):
 
 def Max_Heapify(heap,HeapSize,root):
 	"""在堆中做结构调整使得父节点大于子节点"""
+	# 如果要用最小堆方法只要改成取三个点中最小的作为根节点
 	left = 2*root + 1
 	right = left + 1
 	larger = root
@@ -173,8 +186,9 @@ if __name__ == '__main__':
 	# print(bubble_sort(relist))
 	# print(selection_sort(relist))
 	# print(quick_sort(relist))
+	print(random_quick_sort(relist))
 	# print(insert_sort1(relist))
 	# print(insert_sort2(relist))
 	# print(shell_sort(relist))
 	# print(merge_sort(relist))
-	print(heap_sort(relist))
+	# print(heap_sort(relist))
