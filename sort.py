@@ -179,16 +179,110 @@ def heap_sort(heap):
 		Max_Heapify(heap,i,0)
 	return heap
 
+@decorator
+def bucket_sort1(relist):
+	"""桶排序,桶的数量小于(maxnum-minnum+1)的情况"""
+	length = len(relist)
+	maxnum = max(relist)
+	minnum = min(relist)
+	# 这里取最大最小值差的一半作为桶的数量，+1是因为差可能为奇数
+	buckets_num = int((maxnum-minnum)/2)+1 
+	buckets = []
+	result = []
+	# 先创建buckets_num个空桶
+	for i in range(buckets_num):
+		bucket = []
+		buckets.append(bucket)
+	for j in range(length):
+		index = int((relist[j]-minnum)/2)
+		if len(buckets[index]) == 0:
+			buckets[index].append(relist[j])
+		# 注意这里是elif或者直接为else,开始是if被自己坑了，前面append后len肯定为1了。
+		elif len(buckets[index]) > 0:
+			buckets[index].append(relist[j])
+			# 桶内的排序直接用其他的了~
+			buckets[index] = insert_sort2(buckets[index])
+	# 遍历所有桶，输出有序数组
+	for bucket in buckets:
+		if len(bucket) > 0:
+			for hapi in bucket:
+				result.append(hapi)
+		if len(bucket) == 0:
+			continue
+	return result
+
+@decorator
+def bucket_sort2(relist):
+	"""桶排序，桶的数量刚好为(maxnum-minnum+1)的情况"""
+	length = len(relist)
+	# 求出relist数组中的最大、最小值，来构建temp数组
+	maxnum = max(relist)
+	minnum = min(relist)
+	result = []
+	temp = [0]*(maxnum-minnum+1)
+	# 遍历relist进行计数
+	for i in range(length):
+		temp[relist[i]-minnum] += 1
+	# 读取每个桶中数值的数量，输出有序数组
+	for j in range(len(temp)):
+		if temp[j] == 0:
+			continue
+		if temp[j] > 0:
+			while temp[j]>0:
+				result.append(j+minnum)
+				temp[j] -= 1
+	return result
+
+def count_sort(relist):
+	"""计数排序，输入relist数据为(0-maxmun)的正整数"""
+	maxnum = max(relist)
+	length = len(relist)
+	result = [0]*(length)
+	# temp先保存relist每个数据的计数，然后再转换成在result中的位置
+	temp = [0]*(maxnum+1)
+	# 遍历relist进行计数
+	for num in relist:
+		temp[num] += 1
+	# 对所有计数累加，这样变成了result中的位置
+	for i in range(1,maxnum+1):
+		temp[i] = temp[i-1]+temp[i]
+	# 遍历读取relist,输出有序数组
+	for j in relist:
+		# 读取位置，放入result中
+		result[temp[j]-1] = j
+		# 只能说想出这个算法的人很流弊，relist中有重复数据时，第一次读在temp在其位置上
+		# 第二次又是一样的读temp中的位置，已经-1推前了，不会覆盖掉第一次存的
+		temp[j] -= 1
+	return result
+
+def radix_sort(relist):
+	"""基数排序，k为relist中的最高数位"""
+	maxnum = max(relist)
+	d = len(str(maxnum))
+	# 每一个数位都进行一轮排序，从低位到高位
+	for k in range(d):
+		# 每一位都是0-9的数字，所以每一轮给10个桶进行排序
+		s = [[] for j in range(10)]
+		for i in relist:
+			s[int(i/(10**k))%10].append(i)
+			# 重新排序relist,这样低位排好序的结果在每次循环中可以保存下来
+		relist = [a for b in s for a in b]
+	return relist
+
 
 if __name__ == '__main__':
-	relist = [1,5,2,6,6,9,3]
-	# relist = [random.randint(1,1000) for i in range(1000)]
+	# relist = [1,5,2,6,6,9,3]
+	# relist = [random.randint(1,1000) for i in range(2000)]
 	# print(bubble_sort(relist))
 	# print(selection_sort(relist))
 	# print(quick_sort(relist))
-	print(random_quick_sort(relist))
+	# print(random_quick_sort(relist))
 	# print(insert_sort1(relist))
 	# print(insert_sort2(relist))
 	# print(shell_sort(relist))
 	# print(merge_sort(relist))
 	# print(heap_sort(relist))
+	# print(bucket_sort1(relist))
+	# print(bucket_sort2(relist))
+	# print(count_sort(relist))
+	print(radix_sort(relist))
