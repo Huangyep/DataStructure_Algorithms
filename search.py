@@ -80,6 +80,64 @@ def insert_search(array,target,left,right):
 	if target < array[middle]:
 		return insert_search(array,target,left,middle-1)
 
+def Fab(maxsize):
+	"""斐波那契数组"""
+	if maxsize < 2:
+		fab = [0,1]
+		return fab[:maxsize]
+	fab = []
+	fab.append(0)
+	fab.append(1)
+	for i in range(2,maxsize+1):
+		fn = fab[i-1]+fab[i-2]
+		fab.append(fn)
+	return fab
+
+def fibonacci_search(array,target):
+	"""斐波那契查找"""
+	length = len(array)
+	f = Fab(20)
+	# 如果length+1不是斐波那契数列中的数，在后面补足。但这做法在查找target不可用
+	if length+1 not in f:
+		for i in range(len(f)):
+			if length < f[i]-1:
+				temp = array[length-1]
+				for j in range(length,f[i]-1):
+					array.append(temp)
+				break
+	length_new = len(array)
+	left = 0
+	right = length_new-1
+	n = 0
+	for i in range(len(f)):
+		if length_new == f[i]-1:
+			n = i
+			break
+	while right - left > 1 and n > 0:
+		middle = left + (f[n-1] - 1)
+		if target == array[middle]:
+			# 加这个判断的原因，middle可能落在array扩充的区域，这时候返回i是不正确的
+			if middle > length:
+				return length
+			return middle
+		if target < array[middle]:
+			right = middle - 1
+			n -= 1
+		if target > array[middle]:
+			left = middle + 1
+			n -= 2
+	if right - left == 1:
+		if target == array[left]:
+			if middle > length:
+				return length
+			return left
+		if target == array[right]:
+			if middle > length:
+				return length
+			return right
+	return 
+
+
 
 
 if __name__ == '__main__':
@@ -89,4 +147,5 @@ if __name__ == '__main__':
 	# print("BinarySearch1: i =",binary_search1(array2,10))
 	# print("BnarySearch2:",binary_search2(array2,15))
 	# print("BinarySearch3: i =",binary_search3(array2,8,0,len(array2)-1))
-	print("InsertSearch: i =",insert_search(array2,4,0,len(array2)-1))
+	# print("InsertSearch: i =",insert_search(array2,4,0,len(array2)-1))
+	print("FibonacciSearch: i =",fibonacci_search(array2,10))
