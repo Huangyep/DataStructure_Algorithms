@@ -1,25 +1,30 @@
-# coding = utf-8
+# 完全二叉树的递归和非递归遍历
 
-class Node():
+class Node:
 	"""节点类"""
-	def __init__(self,elem=-1,lchild=None,rchild=None):
+	def __init__(self, elem=-1, lchild=None, rchild=None):
+		# 确定一个节点对象，如果有左右节点，那么它们的值也可以确定
 		self.elem = elem
 		self.lchild = lchild
 		self.rchild = rchild
 
-class Tree():
-	"""完全二叉树类"""
+
+class Tree:
+	"""树类"""
 	def __init__(self):
-		self.root = Node()
-		self.myQueue = []
+		self.root = Node() # 树的根节点
+		self.myQueue = [] # 用来赋值或者遍历用，并不是说myQueue中保存了树的所有信息
+
 	def add(self,elem):
 		"""为树添加节点"""
+		# 构造节点对象
 		node = Node(elem)
+		# 第一次空根节点是Node类，它的elem=-1,第一个值先赋给根节点保存下来
 		if self.root.elem == -1:
-			#给根节点赋值
 			self.root = node
 			self.myQueue.append(self.root)
 		else:
+			# treeNode现在add的节点便是myQueue[0] 
 			treeNode = self.myQueue[0]
 			if treeNode.lchild == None:
 				treeNode.lchild = node
@@ -27,7 +32,7 @@ class Tree():
 			else:
 				treeNode.rchild = node
 				self.myQueue.append(treeNode.rchild)
-				#列表中第一个出栈，即此时的节点
+				# 右节点赋值完成后，treeNode左右子节点都有了，pop(0)后对下一个节点赋值
 				self.myQueue.pop(0)
 
 	def front_digui(self,root):
@@ -98,18 +103,18 @@ class Tree():
 			print(myStack2.pop().elem,end=' ') 
 	def level_queue(self,root):
 		"""利用队列实现树的层次遍历"""
-		if root == None:
-			return
-		myQueue = []
-		node = root
-		myQueue.append(node)
-		while myQueue:
-			node = myQueue.pop(0)
-			print(node.elem,end=' ')
-			if node.lchild != None:
-				myQueue.append(node.lchild)
-			if node.rchild != None:
-				myQueue.append(node.rchild)
+		if root == -1 or root == None:
+			return 
+		temp = []
+		temp.append(self.root)
+		while temp:
+			treeNode = temp.pop(0)
+			print(treeNode.elem,end=' ')
+			if treeNode.lchild:
+				temp.append(treeNode.lchild)
+			if treeNode.rchild:
+				temp.append(treeNode.rchild)
+
 
 
 if __name__ == '__main__':
@@ -117,25 +122,27 @@ if __name__ == '__main__':
 	for elem in range(0,10):
 		tree.add(elem)
 
-	print("DiGuiSiXian",end='')
-	print("\nXianXuBianLi")
+	print("Recursive",end='')
+	print("\nFrontTraverse")
 	tree.front_digui(tree.root)
-	print("\nZhongXuBianLi")
+	print("\nMiddleTraverse")
 	tree.middle_digui(tree.root)
-	print("\nHouXuBianLi")
+	print("\nLaterTraverse")
 	tree.later_digui(tree.root)
+	print()
 
-	print("\nDuiZhanSiXian",end='')
-	print("\nXianXuBianLi")
+	print("\nStack",end='')
+	print("\nFrontTraverse")
 	tree.front_stack(tree.root)
-	print("\nZhongXuBianLi")
+	print("\nMiddleTraverse")
 	tree.middle_stack(tree.root)
-	print("\nHouXuBianLi")
+	print("\nLaterTraverse")
 	tree.later_stack(tree.root)
+	print()
 
-	print("\nDuiLieSiXianCengCiBianLi")
+	print("\nQueue",end=' ')
+	print("\nLevelTraverse")
 	tree.level_queue(tree.root)
-
-	print("\n")
+	print()
 
 	

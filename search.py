@@ -148,4 +148,4 @@ if __name__ == '__main__':
 	# print("BnarySearch2:",binary_search2(array2,15))
 	# print("BinarySearch3: i =",binary_search3(array2,8,0,len(array2)-1))
 	# print("InsertSearch: i =",insert_search(array2,4,0,len(array2)-1))
-	print("FibonacciSearch: i =",fibonacci_search(array2,10))
+	# print("FibonacciSearch: i =",fibonacci_search(array2,10))
