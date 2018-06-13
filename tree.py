@@ -159,12 +159,78 @@ class Tree:
 		# 二叉树的长度为左子树节点数+根节点+右子树节点数
 		return left + 1 + right
 
+	def isBST1(self,root):
+		"""判断是否为二叉搜索树，中序遍历"""
+		# 中序遍历
+		if root == Node:
+			return
+		myStack = []
+		result = []
+		node = root
+		while node or myStack:
+			while node:
+				myStack.append(node)
+				node = node.lchild
+			node = myStack.pop()
+			result.append(node.elem)
+			node = node.rchild
+		# 判断是否有序
+		length = len(result)
+		for i in range(1,length):
+			if result[i] < result[i-1]:
+				return False
+		return True
+
+	def isBST2(self,root):
+		"""判断是否为二叉搜索树，层次遍历"""
+		if root == None:
+			return
+		h = self.height(root)
+		time = 2**(h-1)-1
+		temp = []
+		temp.append(root)
+		while time > 0:
+			node = temp.pop(0)
+			if node.lchild:
+				if node.lchild.elem > node.elem:
+					return False
+				temp.append(node.lchild)
+			if node.rchild:
+				if node.rchild.elem < node.elem:
+					return False
+				temp.append(node.rchild)
+			time -= 1
+		return True
+
+	def isFull(self,root):
+		"""判断是否为满二叉树"""
+		# 因为构造的是完全二叉树，所以直接判断最后一行最左和最右树的深度
+		if root == None:
+			return False
+		h_left = self.height(root)
+		h_right = 1
+		treenode = root
+		while treenode.rchild:
+			h_right += 1
+			treenode = treenode.rchild
+		if h_left != 1 and h_left == h_right:
+			return True
+		return False
 
 
 if __name__ == '__main__':
 	tree = Tree()
-	for elem in range(0,10):
+	for elem in range(0,20):
 		tree.add(elem)
+
+	tree2 = Tree()
+	l1 = [7,4,9,2,6,8,10,1,3,5]
+	for elem in l1:
+		tree2.add(elem)
+
+	tree3 = Tree()
+	for elem in range(0,15):
+		tree3.add(elem)
 
 	# print("Recursive",end='')
 	# print("\nFrontTraverse")
@@ -189,8 +255,12 @@ if __name__ == '__main__':
 	# tree.level_queue(tree.root)
 	# print()
 
-	print("TreeHeight:",tree.height(tree.root))
-	print("TreeLength:",tree.length(tree.root))
+	# print("TreeHeight:",tree.height(tree.root))
+	# print("TreeLength:",tree.length(tree.root))
+	# print()
 
+	print("is BST:",tree2.isBST1(tree2.root))
+	print("is BST:",tree2.isBST2(tree2.root))
+	print("is Full:",tree3.isFull(tree3.root))
 
 	
